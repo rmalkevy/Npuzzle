@@ -10,7 +10,10 @@ class Board
     @size = size
     @board = board
     @goal_board = prepare_snail_goal_board
-    p "goal board #{@goal_board}"
+
+    @goal_board.each do |raw| # TODO: delete later
+      p raw
+    end
   end
 
 
