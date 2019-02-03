@@ -10,7 +10,7 @@ options = ArgsParser.parse(ARGV)
 if options[:path].nil?
   size = options[:size].nil? ? DEFAULT_SIZE : options[:size]
   puzzle = PuzzleGenerator.randomized_puzzle(size)
-  board = Board.new(puzzle, 4)
+  board = Board.new(puzzle, 6)
   # p board.board[:grid]
   # p board.board[:grid][0][0]
   # p board.count_inversions
