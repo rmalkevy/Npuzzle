@@ -10,9 +10,10 @@ class PuzzleGenerator
 
     @digits = count_digits(range[-1])
 
-    @sliced_random_range = range.shuffle.each_slice(size).to_a
+    array = range.shuffle
+    @sliced_random_range = array.each_slice(size).to_a
     create_file_with_puzzle
-    @sliced_random_range
+    { array: array, grid: @sliced_random_range }
   end
 
   private

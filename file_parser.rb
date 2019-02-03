@@ -29,7 +29,7 @@ class FileParser < ErrorsHandler
     puzzle_size = puzzle.shift
     validate_puzzle(puzzle_size, puzzle)
 
-    {size: puzzle_size.first, puzzle: puzzle}
+    {size: puzzle_size.first, grid: puzzle}
   end
 
   def self.slice_comment(line)
