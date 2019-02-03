@@ -9,42 +9,36 @@ module BoardHelper
 
     while true
       # move right
-      (horizontal_index..right_down_moves).each do |i|
-        goal_board[vertical_index][i] = number
+      (left_up_moves..right_down_moves).each do |i|
+        goal_board[left_up_moves][i] = number
         number += 1
-        horizontal_index = i
       end
       break if board_filled?(number)
-      vertical_index += 1
+      left_up_moves += 1
 
       # move down
-      (vertical_index..right_down_moves).each do |i|
-        goal_board[i][horizontal_index] = number
+      (left_up_moves..right_down_moves).each do |i|
+        goal_board[i][right_down_moves] = number
         number +=1
-        vertical_index = i
       end
       break if board_filled?(number)
       right_down_moves -= 1
-      horizontal_index -=1
+      left_up_moves -= 1
 
       # move left
-      (left_up_moves..horizontal_index).reverse_each do |i|
-        goal_board[vertical_index][i] = number
+      (left_up_moves..right_down_moves).reverse_each do |i|
+        goal_board[right_down_moves][i] = number
         number += 1
-        horizontal_index = i
       end
       break if board_filled?(number)
-      vertical_index -= 1
       left_up_moves += 1
 
       # move up
-      (left_up_moves..vertical_index).reverse_each do |i|
-        goal_board[i][horizontal_index] = number
+      (left_up_moves..right_down_moves).reverse_each do |i|
+        goal_board[i][left_up_moves - 1] = number
         number += 1
-        vertical_index = i
       end
       break if board_filled?(number)
-      horizontal_index += 1
     end
 
     goal_board
