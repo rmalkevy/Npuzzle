@@ -39,11 +39,71 @@ module BoardHelper
       break if board_filled?(number)
     end
 
-    goal_board
+    {array: goal_board.flatten, grid: goal_board}
   end
 
-  # break if board_filled?(number)
+  def board_neighbors
+    neighbors = []
+    board = @board[:grid]
+    y, x = find_tile_coordinates
+
+    # try to move LEFT
+    if x > 0 and board.dig(y, x - 1)
+      left_board = Marshal::load(Marshal::dump(board))
+      number = left_board[y][x - 1]
+      left_board[y][x - 1] = 0
+      left_board[y][x] = number
+      neighbors << left_board
+      p 'left'
+      p left_board
+    end
+
+    # try to move UP
+    if y > 0 and board.dig(y - 1, x)
+      up_board = Marshal::load(Marshal::dump(board))
+      number = up_board[y - 1][x]
+      up_board[y - 1][x] = 0
+      up_board[y][x] = number
+      neighbors << up_board
+      p 'up'
+      p up_board
+    end
+
+    # try to move RIGHT
+    unless board.dig(y, x + 1).nil?
+      right_board = Marshal::load(Marshal::dump(board))
+      number = right_board[y][x + 1]
+      right_board[y][x + 1] = 0
+      right_board[y][x] = number
+      neighbors << right_board
+      p 'right'
+      p right_board
+    end
+
+    # try to move DOWN
+    unless board.dig(y + 1, x).nil?
+      down_board = Marshal::load(Marshal::dump(board))
+      number = down_board[y + 1][x]
+      down_board[y + 1][x] = 0
+      down_board[y][x] = number
+      neighbors << down_board
+      p 'down'
+      p down_board
+    end
+    neighbors
+  end
+
   private
+
+  def find_tile_coordinates(tile=0)
+    @board[:grid].each_with_index do |raw, y|
+      raw.each_with_index do |number, x|
+        if tile == number
+          return y, x
+        end
+      end
+    end
+  end
 
   def board_filled?(number)
     number >= @size**2
