@@ -20,25 +20,20 @@ class AStarSearchAlgorithm
         return
       end
 
-      unless closed_dict.include?(current.checksum)
-        closed_dict[current.checksum] = current
+      closed_dict[current.checksum] = current
 
-        current.neighbors.each do |neighbour|
-          next if closed_dict.include?(neighbour.checksum)
-          next if opened_dict.include?(neighbour.checksum)
+      current.neighbors.each do |neighbour|
+        next if closed_dict.include?(neighbour.checksum)
 
-          neighbour.g = closed_dict[current.checksum].g + 1
+        unless opened_dict.include?(neighbour.checksum)
+          neighbour.g = current.g + 1
           neighbour.h = Heuristics.manhattan_distance(neighbour, goal_node)
           neighbour.f = neighbour.g + neighbour.h
           neighbour.parent = current
 
-          unless opened_dict.include?(neighbour.checksum)
-            opened_dict[neighbour.checksum] = neighbour
-          end
+          opened_dict[neighbour.checksum] = neighbour
         end
-
       end
-
     end
   end
 
@@ -50,12 +45,12 @@ class AStarSearchAlgorithm
       current = current.parent
     end
     path.reverse!
-    path.each_with_index do |node, i|
-      p "Node #{i}"
-      node.grid.each do |raw|
-        p raw
-      end
-    end
+    # path.each_with_index do |node, i|
+    #   p "Node #{i}"
+    #   node.grid.each do |raw|
+    #     p raw
+    #   end
+    # end
   end
 
 end

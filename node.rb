@@ -1,63 +1,59 @@
 require 'digest/sha1'
 
 class Node
-  attr_accessor :grid, :parent, :checksum, :h_value, :g, :h, :f
+  attr_accessor :grid, :parent, :checksum, :h_value, :g, :h, :f, :x, :y
 
-  def initialize(grid)
+  def initialize(grid, y=nil, x=nil)
     @grid = grid
     @parent = nil
-    @checksum = Digest::SHA1.hexdigest(Marshal::dump(grid))
-    @blank_tile = nil # how it can help
+    @checksum = Digest::MD5.hexdigest(Marshal::dump(grid))
     @g = 0
     @h = 0
     @f = 0
+    @y = y
+    @x = x
+    @y, @x = tile_coordinates if (x.nil? || y.nil?)
   end
 
   def neighbors
     neighbors = []
-    board = @grid
-    y, x = tile_coordinates(0)
 
     # try to move LEFT
-    if x > 0 and board.dig(y, x - 1)
-      left_board = Marshal::load(Marshal::dump(board))
-      number = left_board[y][x - 1]
+    if x > 0 and grid.dig(y, x - 1)
+      left_board = Marshal::load(Marshal::dump(grid))
+      left_board[y][x] = left_board[y][x - 1]
       left_board[y][x - 1] = 0
-      left_board[y][x] = number
-      neighbors << Node.new(left_board)
+      neighbors << Node.new(left_board, y, x - 1)
     end
 
     # try to move UP
-    if y > 0 and board.dig(y - 1, x)
-      up_board = Marshal::load(Marshal::dump(board))
-      number = up_board[y - 1][x]
+    if y > 0 and grid.dig(y - 1, x)
+      up_board = Marshal::load(Marshal::dump(grid))
+      up_board[y][x] = up_board[y - 1][x]
       up_board[y - 1][x] = 0
-      up_board[y][x] = number
-      neighbors << Node.new(up_board)
+      neighbors << Node.new(up_board, y - 1, x)
     end
 
     # try to move RIGHT
-    unless board.dig(y, x + 1).nil?
-      right_board = Marshal::load(Marshal::dump(board))
-      number = right_board[y][x + 1]
+    unless grid.dig(y, x + 1).nil?
+      right_board = Marshal::load(Marshal::dump(grid))
+      right_board[y][x] = right_board[y][x + 1]
       right_board[y][x + 1] = 0
-      right_board[y][x] = number
-      neighbors << Node.new(right_board)
+      neighbors << Node.new(right_board, y, x + 1)
     end
 
     # try to move DOWN
-    unless board.dig(y + 1, x).nil?
-      down_board = Marshal::load(Marshal::dump(board))
-      number = down_board[y + 1][x]
+    unless grid.dig(y + 1, x).nil?
+      down_board = Marshal::load(Marshal::dump(grid))
+      down_board[y][x] = down_board[y + 1][x]
       down_board[y + 1][x] = 0
-      down_board[y][x] = number
-      neighbors << Node.new(down_board)
+      neighbors << Node.new(down_board, y + 1, x)
     end
     neighbors
   end
 
   def tile_coordinates(tile_value=0)
-    @grid.each_with_index do |raw, y|
+    grid.each_with_index do |raw, y|
       raw.each_with_index do |number, x|
         if tile_value == number
           return y, x

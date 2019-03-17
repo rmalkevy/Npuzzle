@@ -3,6 +3,7 @@ require_relative 'puzzle_generator'
 require_relative 'file_parser'
 require_relative 'default_variables'
 require_relative 'board'
+require 'benchmark'
 
 
 options = ArgsParser.parse(ARGV)

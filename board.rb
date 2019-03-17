@@ -10,14 +10,11 @@ class Board
     @board = board
     @goal_board = prepare_snail_goal_board
 
-    # @board[:grid].each do |raw|
-    #   p raw
-    # end
-    # @goal_board[:grid].each do |raw|
-    #   p raw
-    # end
     if solvable?
-      AStarSearchAlgorithm.search_path(@board, @goal_board)
+      time = Benchmark.measure {
+        10.times { AStarSearchAlgorithm.search_path(@board, @goal_board) }
+      }
+      puts time.real
     else
       p "Puzzle unsolvable!!!"
     end
