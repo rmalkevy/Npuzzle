@@ -1,10 +1,8 @@
 require_relative 'solvability_checker'
-require_relative 'board_helper'
+require_relative 'a_star_search_algorithm'
 
 class Board
   include SolvabilityChecker
-  include BoardHelper
-
   attr_accessor :board, :size
 
   def initialize(board, size)
@@ -12,14 +10,64 @@ class Board
     @board = board
     @goal_board = prepare_snail_goal_board
 
-    @board[:grid].each do |raw| # TODO: delete later
-      p raw
+    # @board[:grid].each do |raw|
+    #   p raw
+    # end
+    # @goal_board[:grid].each do |raw|
+    #   p raw
+    # end
+    if solvable?
+      AStarSearchAlgorithm.search_path(@board, @goal_board)
+    else
+      p "Puzzle unsolvable!!!"
     end
-    #
-    # p @goal_board[:array]
-    p board_neighbors
   end
 
+  def prepare_snail_goal_board
+    goal_board = Array.new(@size**2, 0).each_slice(@size).to_a
+    right_down_moves = @size - 1
+    left_up_moves = 0
+    number = 1
 
+    while true
+      # move right
+      (left_up_moves..right_down_moves).each do |i|
+        goal_board[left_up_moves][i] = number
+        number += 1
+      end
+      break if board_filled?(number)
+      left_up_moves += 1
+
+      # move down
+      (left_up_moves..right_down_moves).each do |i|
+        goal_board[i][right_down_moves] = number
+        number +=1
+      end
+      break if board_filled?(number)
+      left_up_moves -= 1
+      right_down_moves -= 1
+
+      # move left
+      (left_up_moves..right_down_moves).reverse_each do |i|
+        goal_board[right_down_moves + 1][i] = number
+        number += 1
+      end
+      break if board_filled?(number)
+      left_up_moves += 1
+
+      # move up
+      (left_up_moves..right_down_moves).reverse_each do |i|
+        goal_board[i][left_up_moves - 1] = number
+        number += 1
+      end
+      break if board_filled?(number)
+    end
+
+    {array: goal_board.flatten, grid: goal_board}
+  end
+
+  def board_filled?(number)
+    number >= @size**2
+  end
 
 end

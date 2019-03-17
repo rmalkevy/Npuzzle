@@ -29,7 +29,7 @@ class FileParser < ErrorsHandler
     puzzle_size = puzzle.shift
     validate_puzzle(puzzle_size, puzzle)
 
-    {size: puzzle_size.first, grid: puzzle}
+    {size: puzzle_size.first, grid: puzzle, array: puzzle.flatten}
   end
 
   def self.slice_comment(line)
@@ -60,10 +60,11 @@ class FileParser < ErrorsHandler
     end
 
     sequence = puzzle.flatten.sort
-    sequence_size = sequence.size
     sequence.each_with_index do |num, i|
-      if i + 1 < sequence_size
-        unless num == (sequence[i + 1] - 1)
+      return if sequence.size - 1 == i
+
+      if i < sequence.size - 1
+        unless sequence[i + 1] - num == 1
           print_error_and_exit "Incorrect numbers in the sequence. Please put valid puzzle !"
         end
       end
