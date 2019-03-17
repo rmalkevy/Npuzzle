@@ -6,7 +6,8 @@ class Node
   def initialize(grid, y=nil, x=nil)
     @grid = grid
     @parent = nil
-    @checksum = Digest::MD5.hexdigest(Marshal::dump(grid))
+    @checksum = Digest::MD5.hexdigest(Marshal::dump(grid))[0,8]
+    p @checksum
     @g = 0
     @h = 0
     @f = 0
