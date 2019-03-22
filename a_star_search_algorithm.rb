@@ -10,11 +10,11 @@ class AStarSearchAlgorithm
     start_node.f = start_node.g + start_node.h
     closed_dict = {}
     opened_dict = {start_node.checksum => start_node}
-    # pq = PriorityQueue.new
-    # pq[start_node.checksum] = start_node.f
+    pq = PriorityQueue.new
+    pq[start_node.checksum] = start_node.f
 
     while opened_dict.size != 0
-      # pq_checksum = pq.pop_min
+      pq_checksum, min_value = pq.delete_min
       # current_checksum = opened_dict.min_by {|key, node| node.f}.first
       current = opened_dict.delete(pq_checksum)
 
@@ -32,6 +32,7 @@ class AStarSearchAlgorithm
           if !opened_dict.include?(neighbour.checksum)
             opened_dict[neighbour.checksum] = calculate_coefficients(current, neighbour, goal_node)
             opened_dict[neighbour.checksum].parent = current
+            pq[neighbour.checksum] = neighbour.f
           elsif opened_dict.include?(neighbour.checksum)
             potentially_new_lesser_g = current.g + 1
             old_g = opened_dict[neighbour.checksum].g
@@ -39,6 +40,7 @@ class AStarSearchAlgorithm
               opened_dict[neighbour.checksum].g = potentially_new_lesser_g
               opened_dict[neighbour.checksum].f = potentially_new_lesser_g + opened_dict[neighbour.checksum].h
               opened_dict[neighbour.checksum].parent = current
+              pq[neighbour.checksum] = neighbour.f
             end
           end
         end
