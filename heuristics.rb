@@ -6,9 +6,10 @@ class Heuristics
     distance = 0
     goal_board.grid.each_with_index do |raw, y|
       raw.each_with_index do |number, x|
-        y1, x1 = board.tile_coordinates(number)
-        distance += (x - x1).abs + (y - y1).abs
-
+        unless number.zero?
+          y1, x1 = board.tile_coordinates(number)
+          distance += (x - x1).abs + (y - y1).abs
+        end
       end
     end
     distance
@@ -18,8 +19,10 @@ class Heuristics
     distance = 0
     goal_board.grid.each_with_index do |raw, y|
       raw.each_with_index do |number, x|
-        x1, y1 = board.tile_coordinates(number)
-        distance += Math.sqrt((x - x1)**2 + (y - y1)**2)
+        unless number.zero?
+          x1, y1 = board.tile_coordinates(number)
+          distance += Math.sqrt((x - x1)**2 + (y - y1)**2)
+        end
       end
     end
     distance.floor
@@ -29,8 +32,10 @@ class Heuristics
     distance = 0
     goal_board.grid.each_with_index do |raw, y|
       raw.each_with_index do |number, x|
-        x1, y1 = board.tile_coordinates(number)
-        distance += 1 if (x - x1).abs + (y - y1).abs
+        unless number.zero?
+          x1, y1 = board.tile_coordinates(number)
+          distance += 1 if (x - x1).abs + (y - y1).abs
+        end
       end
     end
     distance.floor

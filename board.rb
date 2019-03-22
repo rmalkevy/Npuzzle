@@ -11,8 +11,10 @@ class Board
     @goal_board = prepare_snail_goal_board
 
     if solvable?
+      goal_node = Node.new(@goal_board[:grid])
+      start_node = Node.new(@board[:grid])
       time = Benchmark.measure {
-        10.times { AStarSearchAlgorithm.search_path(@board, @goal_board) }
+        AStarSearchAlgorithm.search_path(start_node, goal_node)
       }
       puts time.real
     else

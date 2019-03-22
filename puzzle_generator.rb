@@ -13,7 +13,7 @@ class PuzzleGenerator
     array = range.shuffle
     @sliced_random_range = array.each_slice(size).to_a
     create_file_with_puzzle
-    { array: array, grid: @sliced_random_range }
+    { array: array, grid: @sliced_random_range, size: size }
   end
 
   private
@@ -30,7 +30,6 @@ class PuzzleGenerator
   end
 
   def self.count_digits(number)
-    # Math.log10(number).to_i + 1 # Faster but has some problem
     number.to_s.length
   end
 

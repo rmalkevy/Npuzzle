@@ -8,13 +8,17 @@ require 'benchmark'
 
 options = ArgsParser.parse(ARGV)
 
-if options[:path].nil?
-  size = options[:size].nil? ? DEFAULT_SIZE : options[:size]
-  puzzle = PuzzleGenerator.randomized_puzzle(size)
-  board = Board.new(puzzle, 3)
-else
+
+if options.dig(:path)
   puzzle = FileParser.parse(options[:path])
-  board = Board.new(puzzle, 3)
+  Board.new(puzzle, 3)
+elsif options.dig(:size)
+  size = options[:size]
+  puzzle = PuzzleGenerator.randomized_puzzle(size)
+  Board.new(puzzle, size)
+else
+  puzzle = PuzzleGenerator.randomized_puzzle(DEFAULT_SIZE)
+  Board.new(puzzle, DEFAULT_SIZE)
 end
 
-
+# TODO: size must be more or equal to 3
