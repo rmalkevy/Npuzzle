@@ -19,6 +19,7 @@ class FileParser < ErrorsHandler
 
   def self.split_to_arrays(data)
     lines = data.split("\n")
+    lines = lines.select {|line| !slice_comment(line).empty?}
     puzzle = lines.map.with_index do |line, i|
       line = slice_comment(line)
       validate_line(line, i)
@@ -40,7 +41,7 @@ class FileParser < ErrorsHandler
     line = line.gsub(/\s+/, "") # delete all whitespaces
 
     unless line =~ /\A\d+\z/ ? true : false
-      print_error_and_exit "Not all chars in the line N_#{index+1} are digits. Please correct your file!"
+      print_error_and_exit "Not all chars in the line N_#{index+1} are digits. Please correct your file!" unless line.empty?
     end
   end
 

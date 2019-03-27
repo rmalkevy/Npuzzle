@@ -1,0 +1,9 @@
+# Real time          = 67.86071299994364
+# Complexity in time = 641751
+# Complexity in size = 1387194
+
+4
+ 9  2  0  4
+13  6 11 10
+ 3  1  8 15
+12  5  7 14

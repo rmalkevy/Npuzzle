@@ -6,7 +6,7 @@ class Node
   def initialize(grid, y=nil, x=nil)
     @grid = grid
     @parent = nil
-    @checksum = Digest::MD5.hexdigest(Marshal::dump(grid))[0,8].to_sym
+    @checksum = Digest::MD5.hexdigest(Marshal::dump(grid))
     @g = 0
     @h = 0
     @f = 0
@@ -35,7 +35,7 @@ class Node
     end
 
     # try to move RIGHT
-    unless grid.dig(y, x + 1).nil?
+    if grid.dig(y, x + 1)
       right_board = Marshal::load(Marshal::dump(grid))
       right_board[y][x] = right_board[y][x + 1]
       right_board[y][x + 1] = 0
@@ -43,13 +43,13 @@ class Node
     end
 
     # try to move DOWN
-    unless grid.dig(y + 1, x).nil?
+    if grid.dig(y + 1, x)
       down_board = Marshal::load(Marshal::dump(grid))
       down_board[y][x] = down_board[y + 1][x]
       down_board[y + 1][x] = 0
       neighbors << Node.new(down_board, y + 1, x)
     end
-    neighbors
+    return neighbors
   end
 
   def tile_coordinates(tile_value=0)

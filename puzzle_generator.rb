@@ -1,6 +1,6 @@
-require_relative 'default_variables'
-
 class PuzzleGenerator
+
+  DEFAULT_SIZE = 3
 
   def self.randomized_puzzle(size=DEFAULT_SIZE)
     @puzzle_size = size

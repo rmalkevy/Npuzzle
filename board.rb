@@ -1,22 +1,29 @@
 require_relative 'solvability_checker'
 require_relative 'a_star_search_algorithm'
+require_relative 'heuristics'
 
 class Board
   include SolvabilityChecker
-  attr_accessor :board, :size
+  attr_accessor :size, :a_star
 
-  def initialize(board, size)
-    @size = size
+  def initialize(board, heuristic_num)
+    @size = board[:size].to_i
+    @heuristic_num = heuristic_num
+    @complexity_in_size, @complexity_in_time, @moves = nil
+
     @board = board
     @goal_board = prepare_snail_goal_board
+    goal_node = Node.new(@goal_board[:grid])
+    start_node = Node.new(board[:grid])
+    @a_star = AStarSearchAlgorithm.new(start_node, goal_node, @size, @heuristic_num)
+  end
 
+  def solve_puzzle
     if solvable?
-      goal_node = Node.new(@goal_board[:grid])
-      start_node = Node.new(@board[:grid])
       time = Benchmark.measure {
-        AStarSearchAlgorithm.search_path(start_node, goal_node)
+        @complexity_in_size, @complexity_in_time, @moves = a_star.search_path
       }
-      puts time.real
+      show_info(time)
     else
       p "Puzzle unsolvable!!!"
     end
@@ -67,6 +74,15 @@ class Board
 
   def board_filled?(number)
     number >= @size**2
+  end
+
+  def show_info(time)
+    puts "Real time          = #{time.real}"
+    puts "Complexity in time = #{@complexity_in_time}"
+    puts "Complexity in size = #{@complexity_in_size}"
+    puts "Quantity of moves  = #{@moves}"
+    puts "Algorithm          = A*"
+    puts "Heuristic          = #{a_star.heuristic.name}"
   end
 
 end

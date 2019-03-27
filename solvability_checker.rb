@@ -32,15 +32,4 @@ module SolvabilityChecker
     a...b
   end
 
-  def count_raw_for_number(number=0, puzzle)
-    (puzzle[:array].index(number) / @size).floor
-    # puzzle[:grid].each_with_index do |raw, i|
-    #   raw.each do |tile|
-    #     if tile == number
-    #       return i
-    #     end
-    #   end
-    # end
-  end
-
 end
